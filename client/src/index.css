@@ -238,7 +238,7 @@
 
 /* Professional button styles */
 .btn-engineering {
-  @apply bg-primary hover:bg-primary/90 text-primary-foreground font-medium py-2 px-4 rounded-lg transition-colors duration-200;
+  @apply bg-primary hover:bg-blue-600 text-primary-foreground font-medium py-2 px-4 rounded-lg transition-colors duration-200;
 }
 
 .btn-engineering-outline {
@@ -255,7 +255,7 @@
 }
 
 .file-upload-zone.drag-active {
-  @apply border-primary bg-primary/5;
+  @apply border-primary bg-blue-50;
 }
 
 /* LCA calculation specific styles */
@@ -303,7 +303,8 @@
 
 /* Accessibility improvements */
 .sr-only {
-  @apply absolute w-px h-px p-0 -m-px overflow-hidden clip-[rect(0,0,0,0)] whitespace-nowrap border-0;
+  @apply absolute w-px h-px p-0 -m-px overflow-hidden whitespace-nowrap border-0;
+  clip: rect(0, 0, 0, 0);
 }
 
 /* Focus management for accessibility */

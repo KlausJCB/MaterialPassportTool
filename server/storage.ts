@@ -120,7 +120,7 @@ export class DatabaseStorage implements IStorage {
         eq(materialPassports.id, id),
         eq(materialPassports.authorId, authorId)
       ));
-    return result.rowCount > 0;
+    return (result.rowCount || 0) > 0;
   }
 
   // Component operations
