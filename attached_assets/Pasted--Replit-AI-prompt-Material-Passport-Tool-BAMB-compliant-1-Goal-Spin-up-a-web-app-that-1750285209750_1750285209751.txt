@@ -1,0 +1,52 @@
+# 🚀 Replit AI prompt: “Material-Passport Tool (BAMB-compliant)”
+
+## 1 – Goal
+Spin up a web app that lets structural-engineering teams create, store and export BAMB-style Material Passports at *material* and *component* level, with full life-cycle scope through Stage D.
+
+## 2 – Stack
+- **Backend** FastAPI + SQLModel + SQLite (dev) → 1-line upgrade to Postgres
+- **Auth** JWT (python-jose) with 3 roles  
+  *Author* (admin), *Member* (edit), *Viewer* (read-only)
+- **Imports**  
+  • IFC via **ifcOpenShell** (Revit → IFC export)  
+  • Excel (pandas/openpyxl)  
+  • EPD XML (openEPD-parser stub)  
+- **Calc engine** Python service that:
+  1. auto-computes mass, volume & density  
+  2. multiplies mass × GWP factors for EN 15804 A1-A3  
+  3. requires / infers Stage D benefit  
+  (extra impact categories plug-in ready)
+- **Frontend** React-TS + MUI + React-Router + axios
+- **Exports** JSON (BAMB-MPP schema) and ReportLab-generated PDF
+- **Standards hooks** ISO 14040/44, ISO 20887, ISO 12006-3, ISO 23387
+
+## 3 – Mandatory fields (block : fields)
+1. **Physical** Density, Volume/Weight, Strength, Service Life :contentReference[oaicite:0]{index=0}  
+2. **Chemical/Health** Constituents %, SVHC/REACH flag, VOC class :contentReference[oaicite:1]{index=1}  
+3. **Process/IDs** GTIN/EAN/CAS, Manufacturer, BIM ObjectGUID   
+4. **Circularity** Disassembly rating, Recyclability % :contentReference[oaicite:2]{index=2}  
+5. **LCA stub** Mass (kg), GWP [A1-A3], Stage D benefit :contentReference[oaicite:3]{index=3}  
+
+Cannot save a passport if any of the above are blank.
+
+## 4 – Key user stories
+- Author invites Members, approves sign-ups, bumps DB to Postgres in prod.  
+- Member uploads IFC → selects components → adds chemistry data → saves passport → sees auto GWP & Stage D.  
+- Viewer opens the same component read-only, exports PDF.  
+
+## 5 – Repository bootstrap (bash)
+```bash
+# backend
+poetry new material-passport && cd material-passport
+poetry add fastapi uvicorn[standard] sqlmodel python-jose[cryptography] passlib[bcrypt]
+poetry add ifcopenshell pandas openpyxl lxml reportlab
+poetry add pytest pytest-asyncio httpx black --group dev
+
+# frontend
+npx create-react-app frontend --template typescript
+cd frontend
+npm i @mui/material @emotion/react @emotion/styled react-router-dom axios
+
+# run both
+poetry run uvicorn app.main:app --reload
+(cd frontend && npm start)
